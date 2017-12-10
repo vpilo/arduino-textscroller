@@ -15,9 +15,10 @@ private:
 public:
     void Display(std::string text, int16_t x, int16_t y, PixelPrinterLambda operation);
     void DisplaySimple(std::string text, int16_t x, int16_t y, PixelPrinterLambda operation);
-    void DisplayChar(uint16_t symbolIndex, int16_t xPos, int16_t yPos, PixelPrinterLambda operation);
     uint16_t StringPixelSize(std::string string);
 
 private:
-    bool FindInString(const std::string& str, const uint16_t stringOffset, uint16_t &arrayOffset, uint32_t &character);
+    void DisplayChar(uint16_t symbolIndex, int16_t xPos, int16_t yPos, PixelPrinterLambda operation);
+    bool GetUtf8Character(const std::string& str, const uint16_t stringPos, uint16_t &stringOffset, uint16_t &arrayOffset, uint32_t &character);
+    uint16_t GetSymbolIndex(uint32_t character);
 };

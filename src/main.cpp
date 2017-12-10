@@ -20,7 +20,7 @@ int16_t red = min;
 int16_t green = max;
 int16_t blue = (max - min) / 2;
 
-std::string message = "Valerio";
+std::string message = "k®";
 int minX = - text.StringPixelSize(message) + 1;
 int maxX = screen.WIDTH - 1;
 int x = maxX;
@@ -28,12 +28,12 @@ int x = maxX;
 void loop() {
 //  lg->PrintOne("R" + String(red) + " G" + String(green) + " B" + String(blue) + "\r");
 
-  text.DisplaySimple(message, x, 0, [&](int8_t xP, int8_t yP, bool on) {
+  text.Display(message, x, 0, [&](int8_t xP, int8_t yP, bool on) {
     screen.SetPixel(xP, yP, on ? RgbColor(red,green,blue) : screen.BLACK);
   });
 
   screen.Show();
-  delay(60);
+  delay(6000);
 
   red += redDir;
   green += greenDir;
