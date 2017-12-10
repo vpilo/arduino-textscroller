@@ -15,37 +15,33 @@ void Text::Display(std::string text, int16_t x, int16_t y, PixelPrinterLambda op
       lg->Print("!!! Cannot read input string.");
       return;
     }
-    lg->Print("--> Input now at pos " + String(stringOffset) + ": char " + lg->PrintHex(character) + " (byte nr " + String(arrayOffset) + ")");
-
-    DisplayChar(GetSymbolIndex(character), (stringOffset*FONT_WIDTH) + x, y, operation);
+    arrayOffset++;
+    DisplayChar(GetSymbolIndex(character), (stringOffset++*FONT_WIDTH) + x, y, operation);
   }
-
-    lg->Print("Done");
+  lg->Print("Displayed: " + String(text.c_str()));
 }
-/*
-ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890+-*%/=~^<>()[]{}.:;,!?@&$#\\'\"€£¥«»©®±°¹²³µ¶¼½¾¿XØ
-*/
 
 uint16_t Text::GetSymbolIndex(uint32_t character) {
   uint16_t arrayOffset = 0;
   uint16_t symbolIndex = 0;
   uint32_t currentChar = 0;
 
-    for (uint16_t pos = 0 ; pos < Font::BITMAPS_LEN ; ++pos) {
-      if (!GetUtf8Character(Font::CHAR_TO_SYMBOL, pos, pos, arrayOffset, currentChar)) {
-        lg->Print("!!! Cannot read symbol lookup string.");
-        return Font::SYMBOL_INVALID_CHARACTER;
-      }
-      if (currentChar == character) {
-        lg->Print("Found char " + lg->PrintHex(character) + " at " + String(arrayOffset - 1));
-        return arrayOffset - 1;
-      } else {
-        lg->Print("Current char was " + lg->PrintHex(currentChar) + " at " + String(arrayOffset - 1));
-      }
+  for (uint16_t pos = 0 ; pos < Font::BITMAPS_LEN ; ++pos) {
+    if (!GetUtf8Character(Font::CHAR_TO_SYMBOL, pos, pos, arrayOffset, currentChar)) {
+      lg->Print("!!! Cannot read symbol lookup string.");
+      return Font::BITMAP_INVALID_CHARACTER;
     }
+    if (currentChar == character) {
+//      lg->Print("GetSymbolIndex: OK: symbol for [" + lg->PrintHex(character) + "] found at " + String(pos));
+      return pos;
+    } else {
+//      lg->Print("GetSymbolIndex: symbol for [" + lg->PrintHex(character) + "] doesn't match [" + lg->PrintHex(currentChar) + "] at " + String(pos));
+    }
+    arrayOffset++;
+  }
 
-    lg->Print("Symbol not found for char " + lg->PrintHex(character));
-    return Font::SYMBOL_INVALID_CHARACTER;
+  lg->Print("GetSymbolIndex: FAIL: symbol for [" + lg->PrintHex(character) + "] not found");
+  return Font::BITMAP_INVALID_CHARACTER;
 }
 
 /**
@@ -54,22 +50,18 @@ uint16_t Text::GetSymbolIndex(uint32_t character) {
  * @param str  The string, duh
  * @param stringPos  The character to get from the string
  * @param stringOffset  Where to start looking from in the string, considering multibyte chars as one
- *                      Updated with which position to look for, considering multibyte chars as one
  * @param arrayOffset  Where to start looking from in the array bytes
  *                     Updated with which byte in the array 'stringPos' is located
  * @param character  The multibyte character you were looking for
  * @return bool
  */
-bool Text::GetUtf8Character(const std::string& str, const uint16_t stringPos, uint16_t &stringOffset, uint16_t &arrayOffset, uint32_t &character) {
-  //vale®io
-  //v a l e \95 \106 i o
-  //ABCDEFGHIJKLMNOPQRSTUVWX€asdfgh®jkl
-
+bool Text::GetUtf8Character(const std::string& str, const uint16_t stringPos, const uint16_t stringOffset, uint16_t &arrayOffset, uint32_t &character) {
   if (arrayOffset >= str.length()) {
     lg->Print("!!! Invalid array offset past the end of string!");
     return false;
   }
 
+  uint16_t currentStringOffset = stringOffset;
   while (arrayOffset < str.length()) {
     uint8_t ascii = str.at(arrayOffset);
   
@@ -98,18 +90,18 @@ bool Text::GetUtf8Character(const std::string& str, const uint16_t stringPos, ui
 //          lg->Print("Found 3-byter at stringPos: " + String(stringPos) + " - " + String(ascii, 16) + " " + String(asciiAfter, 16) + " " + String(str.at(arrayOffset+2), 16));
           break;
         default:
-          lg->Print("!!! Unsupported character at stringPos " + String(stringPos) + ", code " + String(ascii, 16));
+          lg->Print("!!! Unsupported character at stringPos " + String(stringPos) + " [" + lg->PrintHex(character) + "]");
           return false;
       }
     }
-    arrayOffset++;
-    stringOffset++;
-    if (stringPos == (stringOffset - 1)) {
-      lg->Print("Index in string: " + String(stringOffset-1)
-       + " letter " + lg->PrintHex(character)
-       + " char " + String((char)character) + " now at arrayPos: " + String(arrayOffset));
+    if (stringPos == currentStringOffset) {
+//      lg->Print("GetUtf8Character: Index in string: " + String(currentStringOffset)
+//       + " letter " + lg->PrintHex(character)
+//       + " char " + String((char)character));
       return true;
     }
+    currentStringOffset++;
+    arrayOffset++;
   }
 
   return false;
@@ -121,7 +113,7 @@ void Text::DisplaySimple(std::string text, int16_t x, int16_t y, PixelPrinterLam
     int16_t symbolIndex = Font::CHAR_TO_SYMBOL.find(ch);
     if (symbolIndex == std::string::npos || symbolIndex >= Font::BITMAPS_LEN)
     {
-      symbolIndex = Font::SYMBOL_INVALID_CHARACTER;
+      symbolIndex = Font::BITMAP_INVALID_CHARACTER;
     }
     DisplayChar(symbolIndex, (pos*FONT_WIDTH) + x, y, operation);
   }

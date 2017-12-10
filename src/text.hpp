@@ -19,6 +19,6 @@ public:
 
 private:
     void DisplayChar(uint16_t symbolIndex, int16_t xPos, int16_t yPos, PixelPrinterLambda operation);
-    bool GetUtf8Character(const std::string& str, const uint16_t stringPos, uint16_t &stringOffset, uint16_t &arrayOffset, uint32_t &character);
+    bool GetUtf8Character(const std::string& str, const uint16_t stringPos, const uint16_t stringOffset, uint16_t &arrayOffset, uint32_t &character);
     uint16_t GetSymbolIndex(uint32_t character);
 };
