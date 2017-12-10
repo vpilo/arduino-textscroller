@@ -2,6 +2,7 @@
 #include <screen.hpp>
 #include <text.hpp>
 #include <logger.hpp>
+#include <utils.hpp>
 
 Screen screen;
 Text text;
@@ -9,6 +10,7 @@ Logger *lg = Logger::Instance();
 
 void setup() {
   screen.Init();
+  Utils::SetRandomSeed();
 }
 
 int8_t redDir = +5;
