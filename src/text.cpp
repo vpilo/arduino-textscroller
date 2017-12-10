@@ -16,7 +16,7 @@ void Text::Display(std::string text, int16_t x, int16_t y, PixelPrinterLambda op
       DisplayChar(GetSymbol(codepoint), (stringOffset++*FONT_WIDTH) + x, y, operation);
     }
   }
-  lg->Print("Displayed: " + String(text.c_str()));
+//  lg->Print("Displayed: " + String(text.c_str()));
 }
 
 uint64_t Text::GetSymbol(uint32_t codepoint) {
@@ -27,12 +27,13 @@ uint64_t Text::GetSymbol(uint32_t codepoint) {
   } else if (codepoint >= FONT8X8_EXT_LATIN_BEGIN && codepoint <= FONT8X8_EXT_LATIN_END) {
     return font8x8_ext_latin[codepoint - FONT8X8_EXT_LATIN_BEGIN];
   } else {
+//    lg->Print("Displaying replacement character for code point: " + String(codepoint, 16));
     return font8x8_fault[0]; // Invalid character (unknown symbol)
   }
 }
 
 void Text::DisplayChar(uint64_t symbol, int16_t xPos, int16_t yPos, PixelPrinterLambda operation) {
-    lg->Print("Printing character " + String((unsigned long)symbol, 16) + " at (" + String(xPos) + "," + String(yPos) + ")");
+//    lg->Print("Printing character " + String((unsigned long)symbol, 16) + " at (" + String(xPos) + "," + String(yPos) + ")");
     for (int row = 0 ; row < FONT_HEIGHT ; ++row) {
       uint8_t value = (symbol >> row * 8) & 0xFF;
       for (int x = 0 ; x < FONT_WIDTH ; ++x) {
