@@ -42,6 +42,16 @@ void Text::DisplayChar(uint64_t symbol, int16_t xPos, int16_t yPos, PixelPrinter
     }
 }
 
-uint16_t Text::StringPixelSize(std::string string) {
-  return string.length() * FONT_WIDTH;
+uint16_t Text::StringPixelSize(std::string text) {
+  uint32_t codepoint;
+  uint32_t state = UTF8_ACCEPT;
+  uint16_t length = 0;
+  const char *c_str = text.c_str();
+
+  for (; *c_str; ++c_str) {
+    if (!utf8decode(&state, &codepoint, *c_str)) {
+      length++;
+    }
+  }
+  return length * FONT_WIDTH;
 }

@@ -20,7 +20,7 @@ int16_t red = min;
 int16_t green = max;
 int16_t blue = (max - min) / 2;
 
-std::string message = "┄ V@l€ríØ :)";
+std::string message = "┄V@l€ríØ :)";
 int minX = - text.StringPixelSize(message) + 1;
 int maxX = screen.WIDTH - 1;
 int x = maxX;
