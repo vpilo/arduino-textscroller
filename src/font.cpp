@@ -1,8 +1,8 @@
-#include <WString.h>
+#include <Arduino.h>
 #include <font.hpp>
 
-const String Font::CHAR_TO_SYMBOL = {
-  String("ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890+-*/%=~^<>()[]{}.:;,!?@&$#\\'\"€£¥«»©®±°¹²³µ¶¼½¾¿XØ")
+const std::string Font::CHAR_TO_SYMBOL = {
+  "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890+-*%/=~^<>()[]{}.:;,!?@&$#\\'\"€£¥«»©®±°¹²³µ¶¼½¾¿XØ"
 };
     
 const uint64_t Font::SYMBOLS[] PROGMEM = {
@@ -72,8 +72,8 @@ const uint64_t Font::SYMBOLS[] PROGMEM = {
   0x00000c0c3f0c0c00, // +
   0x000000003f000000, // -
   0x0000663cff3c6600, // *
-  0x000103060c183060, // /
   0x0063660c18336300, // %
+  0x000103060c183060, // /
   0x00003f00003f0000, // =
   0x0000000000003b6e, // ~
   0x0000000063361c08, // ^
