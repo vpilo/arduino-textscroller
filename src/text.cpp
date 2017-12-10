@@ -88,7 +88,7 @@ bool Text::GetUtf8Character(const std::string& str, const uint16_t stringPos, ui
           character = (ascii << 8) + asciiAfter;
 //          lg->Print("Found 2-byter at stringPos: " + String(stringPos) + " - " + String(ascii, 16) + " " + String(asciiAfter, 16));
           break;
-        case 0x82:
+        case 0xE2:
           arrayOffset += 2;
           if (arrayOffset >= str.length()) {
             lg->Print("!!! Broken last character? stringPos " + String(stringPos) + ", code " + String(ascii, 16));
