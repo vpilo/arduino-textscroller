@@ -4,6 +4,9 @@
 #include <functional>
 #include <stdint.h>
 
+class Text;
+extern Text *text;
+
 class Text {
 public:
   typedef std::function<void (int8_t x, int8_t y, bool on)> PixelPrinterLambda;
