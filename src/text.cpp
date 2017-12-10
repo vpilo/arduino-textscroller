@@ -13,7 +13,6 @@ void Text::Display(std::string text, int16_t x, int16_t y, PixelPrinterLambda op
 
   for (; *c_str; ++c_str) {
     if (!utf8decode(&state, &codepoint, *c_str)) {
-      lg->Print("ch: " + lg->PrintHex(codepoint));
       DisplayChar(GetSymbol(codepoint), (stringOffset++*FONT_WIDTH) + x, y, operation);
     }
   }
@@ -28,7 +27,7 @@ uint64_t Text::GetSymbol(uint32_t codepoint) {
   } else if (codepoint >= FONT8X8_EXT_LATIN_BEGIN && codepoint <= FONT8X8_EXT_LATIN_END) {
     return font8x8_ext_latin[codepoint - FONT8X8_EXT_LATIN_BEGIN];
   } else {
-    return (uint64_t)0x007f63554955637f; // Invalid character (unknown symbol)
+    return font8x8_fault[0]; // Invalid character (unknown symbol)
   }
 }
 

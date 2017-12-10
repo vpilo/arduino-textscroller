@@ -11,3 +11,4 @@
 #include "font8x8_basic.h"
 #include "font8x8_ext_latin.h"
 #include "font8x8_currencies.h"
+#include "font8x8_fault.h"

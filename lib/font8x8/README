@@ -5,6 +5,7 @@ Credits: https://github.com/dhepper/font8x8
 Changelog:
 * removed the code point blocks I didn't need
 * Added Euro sign (font8x8_currencies.h)
+* Added a replacement character sign (font8x8_fault.h)
 * Changed the arrays into simple uint64_t arrays instead of bidimensional
 * Inverted the endianness of all values to match the renderer and the 
   online tools used, e.g.:
