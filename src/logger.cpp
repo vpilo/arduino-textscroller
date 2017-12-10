@@ -27,3 +27,8 @@ void Logger::PrintOne(String message) {
   Serial.print(message);
   Serial.flush();
 }
+
+String Logger::PrintHex(uint32_t value) {
+  return String((int)((value>>24)&0xFF), 16) + " " + String((int)((value>>16)&0xFF), 16) +
+         String((int)((value>>8)&0xFF), 16) + " " + String((int)((value)&0xFF), 16);
+}
