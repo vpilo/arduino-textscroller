@@ -14,5 +14,4 @@ public:
   static Logger *Instance();
   void Print(String message);
   void PrintOne(String message);
-  String PrintHex(uint32_t value);
 };
