@@ -3,6 +3,9 @@
 #include <NeoPixelBus.h>
 #include <stdint.h>
 
+class Screen;
+extern Screen *screen;
+
 class Screen {
 public:
     static const uint16_t WIDTH = 15;
@@ -11,10 +14,10 @@ public:
 
     // Max brightness for white - lower than for normal colors as
     // the white degrades into other colors (yellow) above this threshold
-    const uint8_t MAX_BRIGHTNESS_WHITE = 63;
-    const uint8_t MAX_BRIGHTNESS_COLORS = 255;
-    const RgbColor WHITE = { MAX_BRIGHTNESS_WHITE };
-    const RgbColor BLACK = { 0 };
+    static const uint8_t MAX_BRIGHTNESS_WHITE = 63;
+    static const uint8_t MAX_BRIGHTNESS_COLORS = 255;
+    static const RgbColor WHITE;
+    static const RgbColor BLACK;
 
 private:
     const uint16_t _testFrameDuration = 5; // ms
@@ -24,14 +27,15 @@ private:
 
 public:
     void Init();
-
+    void Test();
 
     void Clear();
-    void Test();
 
     void ScreenToGray(int brightness);
     void ScreenToColor(RgbColor color);
 
+    // Manual pixel management
     void SetPixel(int8_t x, int8_t y, RgbColor color);
+    void SetAllPixels(RgbColor color);
     void Show();
 };

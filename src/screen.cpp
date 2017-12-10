@@ -1,6 +1,10 @@
 #include <screen.hpp>
 #include <logger.hpp>
 
+const RgbColor Screen::WHITE = { MAX_BRIGHTNESS_WHITE };
+const RgbColor Screen::BLACK = { 0 };
+
+
 void Screen::Init() {
   _strip.Begin();
   Test();
@@ -17,6 +21,10 @@ void Screen::SetPixel(int8_t x, int8_t y, RgbColor color) {
   if (y < 0 || y >= HEIGHT) return;
 
   _strip.SetPixelColor(_topo.Map(x, y), adjusted);
+}
+
+void Screen::SetAllPixels(RgbColor color) {
+  _strip.ClearTo(color);
 }
 
 void Screen::Show() {
