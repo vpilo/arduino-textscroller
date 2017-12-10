@@ -31,7 +31,7 @@ uint16_t Text::GetSymbolIndex(uint32_t character) {
   uint16_t symbolIndex = 0;
   uint32_t currentChar = 0;
 
-    for (uint16_t pos = 0 ; pos < Font::SYMBOLS_LEN ; ++pos) {
+    for (uint16_t pos = 0 ; pos < Font::BITMAPS_LEN ; ++pos) {
       if (!GetUtf8Character(Font::CHAR_TO_SYMBOL, pos, pos, arrayOffset, currentChar)) {
         lg->Print("!!! Cannot read symbol lookup string.");
         return Font::SYMBOL_INVALID_CHARACTER;
@@ -119,7 +119,7 @@ void Text::DisplaySimple(std::string text, int16_t x, int16_t y, PixelPrinterLam
   for (int pos = 0 ; pos < text.length() ; ++pos) {
     uint8_t ch = text.at(pos);
     int16_t symbolIndex = Font::CHAR_TO_SYMBOL.find(ch);
-    if (symbolIndex == std::string::npos || symbolIndex >= Font::SYMBOLS_LEN)
+    if (symbolIndex == std::string::npos || symbolIndex >= Font::BITMAPS_LEN)
     {
       symbolIndex = Font::SYMBOL_INVALID_CHARACTER;
     }
@@ -130,7 +130,7 @@ void Text::DisplaySimple(std::string text, int16_t x, int16_t y, PixelPrinterLam
 void Text::DisplayChar(uint16_t symbolIndex, int16_t xPos, int16_t yPos, PixelPrinterLambda operation) {
 //    lg->Print("Printing character " + String(symbolIndex) + " at (" + String(xPos) + "," + String(yPos) + ")");
     for (int row = 0 ; row < FONT_HEIGHT ; ++row) {
-      uint8_t value = (Font::SYMBOLS[symbolIndex] >> row * 8) & 0xFF;
+      uint8_t value = (Font::BITMAPS[symbolIndex] >> row * 8) & 0xFF;
       for (int x = 0 ; x < FONT_WIDTH ; ++x) {
         operation(x + xPos, row + yPos, bitRead(value, x));
       }

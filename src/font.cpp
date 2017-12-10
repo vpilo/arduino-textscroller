@@ -5,7 +5,7 @@ const std::string Font::CHAR_TO_SYMBOL = {
   "ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz1234567890+-*%/=~^<>()[]{}.:;,!?@&$#\\'\"€£¥«»©®±°¹²³µ¶¼½¾¿XØ"
 };
     
-const uint64_t Font::SYMBOLS[] PROGMEM = {
+const uint64_t Font::BITMAPS[] PROGMEM = {
   0x0033333f33331e0c, // A
   0x003f66663e66663f, // B
   0x003c66030303663c, // C
@@ -124,6 +124,6 @@ const uint64_t Font::SYMBOLS[] PROGMEM = {
 //  0x081c3e7f7f360000, // Heart
 };
 
-const uint16_t Font::SYMBOLS_LEN = sizeof(SYMBOLS) / sizeof(uint64_t);
+const uint16_t Font::BITMAPS_LEN = sizeof(BITMAPS) / sizeof(uint64_t);
 
-const uint16_t Font::SYMBOL_INVALID_CHARACTER = Font::SYMBOLS_LEN - 1;
+const uint16_t Font::BITMAP_INVALID_CHARACTER = Font::BITMAPS_LEN - 1;
