@@ -16,12 +16,17 @@ public:
   };
   
 public:
-  void Init(std::string message);
-  void ScrollTextColor(ScrollDirection dir, RgbColor color);
+  void Init();
+
+  void SetText(const String& message);
+  void SetScrollColor(RgbColor color);
+
+  void ScrollTextColor(ScrollDirection dir);
   void ScrollTextRainbow(ScrollDirection dir);
 
 private:
-  void RedirectColor(int8_t &color, int8_t &direction);
+  void Display();
+  void RandomizeColor(int8_t &color, int8_t &direction);
 
 private:
   // Colors for rainbow mode

@@ -6,7 +6,7 @@
 #include <Arduino.h>
 
 
-void TextScroller::Init(std::string message) {
+void TextScroller::Init() {
   red = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   green = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   blue = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
@@ -14,20 +14,51 @@ void TextScroller::Init(std::string message) {
   greenDirection = +1;
   blueDirection = -1;
 
-  scrollMessage = message;
-
-  minX = - text->StringPixelSize(message) + 1;
   maxX = Screen::WIDTH - 1;
-  position = 0;
+
+  SetText("...");
 }
 
-void TextScroller::ScrollTextColor(ScrollDirection dir, RgbColor color) {
+void TextScroller::SetScrollColor(RgbColor color) {
+  red = color.R;
+  green = color.G;
+  blue = color.B;
+}
+
+void TextScroller::SetText(const String& message) {
+  if (scrollMessage.compare(message.c_str()) == 0) {
+    return;
+  }
+
+  scrollMessage = message.c_str();
+
+  uint16_t length = text->StringPixelSize(scrollMessage);
+  minX = - length + 1;
+  position = 0;
+
+  lg->Print("New text: '" + String(message.c_str()) + "' of size: " + String(length));
+}
+
+void TextScroller::ScrollTextColor(ScrollDirection dir) {
+  if (dir == Left) {
+    position--;
+    if (position <= minX) {
+      position = maxX;
+    }
+  } else {
+    position++;
+    if (position >= maxX) {
+      position = minX;
+    }
+  }
+
+  Display();
 }
 
 void TextScroller::ScrollTextRainbow(ScrollDirection dir) {
-  RedirectColor(red, redDirection);
-  RedirectColor(green, greenDirection);
-  RedirectColor(blue, blueDirection);
+  RandomizeColor(red, redDirection);
+  RandomizeColor(green, greenDirection);
+  RandomizeColor(blue, blueDirection);
 
   if (dir == Left) {
     position--;
@@ -41,18 +72,11 @@ void TextScroller::ScrollTextRainbow(ScrollDirection dir) {
     }
   }
 
-  lg->PrintOne("Rainbowing: R" + String(red) + " G" + String(green) + " B" + String(blue) + "      \r");
-
-  screen->SetAllPixels(Screen::BLACK);
-  text->Display(scrollMessage, position, 0, [&](int8_t xP, int8_t yP, bool on) {
-    screen->SetPixel(xP, yP, on ? RgbColor(red, green, blue) : Screen::BLACK);
-  });
-
-  screen->Show();
-  delay(60);
+  //lg->PrintOne("Rainbowing: R" + String(red) + " G" + String(green) + " B" + String(blue) + "      \r");
+  Display();
 }
 
-void TextScroller::RedirectColor(int8_t &color, int8_t &direction) {
+void TextScroller::RandomizeColor(int8_t &color, int8_t &direction) {
   color += direction * random(0, CHANGE_SPEED);
 
   if(color <= BRIGHTNESS_MIN) {
@@ -62,4 +86,14 @@ void TextScroller::RedirectColor(int8_t &color, int8_t &direction) {
     color = BRIGHTNESS_MAX;
     direction = -direction;
   }
+}
+
+void TextScroller::Display() {
+  screen->SetAllPixels(Screen::BLACK);
+  text->Display(scrollMessage, position, 0, [&](int16_t xP, int16_t yP, bool on) {
+    screen->SetPixel(xP, yP, on ? RgbColor(red, green, blue) : Screen::BLACK);
+  });
+
+  screen->Show();
+  delay(180);
 }

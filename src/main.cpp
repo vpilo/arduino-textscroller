@@ -18,9 +18,11 @@ void setup() {
   text = new Text();
   Utils::SetRandomSeed();
 
-  scroll.Init("V@l€ríØ┄");
+  scroll.Init();
+  scroll.SetText("This looks like a message!");
 }
 
 void loop() {
-  scroll.ScrollTextRainbow(TextScroller::Left);
+  //scroll.ScrollTextRainbow(TextScroller::Left);
+  scroll.ScrollTextColor(TextScroller::Left);
 }
