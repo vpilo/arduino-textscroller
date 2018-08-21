@@ -1,6 +1,5 @@
 #include <textscroller.hpp>
 #include <screen.hpp>
-#include <text.hpp>
 #include <logger.hpp>
 #include <utils.hpp>
 #include <Arduino.h>
@@ -91,7 +90,7 @@ void TextScroller::RandomizeColor(int8_t &color, int8_t &direction) {
 
 void TextScroller::Display() {
   screen->SetAllPixels(Screen::BLACK);
-  text->Display(scrollMessage, position, 0, [&](int16_t xP, int16_t yP, bool on) {
+  text->Display(scrollMessage, position, 0, [&](coord_t xP, coord_t yP, bool on) {
     screen->SetPixel(xP, yP, on ? RgbColor(red, green, blue) : Screen::BLACK);
   });
 

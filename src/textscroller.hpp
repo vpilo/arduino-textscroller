@@ -1,5 +1,7 @@
 #pragma once
 
+#include <text.hpp>
+
 #include <NeoPixelBus.h>
 
 // Brightness of each color channel
@@ -37,9 +39,9 @@ private:
   int8_t blue;
   int8_t blueDirection;
 
-  int16_t minX;
-  int16_t maxX;
+  coord_t minX;
+  coord_t maxX;
 
-  int8_t position;
+  coord_t position;
   std::string scrollMessage;
 };
