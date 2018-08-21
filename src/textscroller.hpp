@@ -8,7 +8,9 @@
 #define BRIGHTNESS_MIN  0
 #define BRIGHTNESS_MAX  48
 
-#define CHANGE_SPEED  3
+#define DEFAULT_SCROLL_SPEED 5
+
+#define COLOR_CHANGE_SPEED  3
 
 class TextScroller {
 public:
@@ -20,6 +22,9 @@ public:
 public:
   void Init();
 
+  // 1-10 where 1 is super slow, 10 is crazy fast
+  void SetSpeed(uint16_t speed);
+
   void SetText(const String& message);
   void SetScrollColor(RgbColor color);
 
@@ -29,6 +34,7 @@ public:
 private:
   void Display();
   void RandomizeColor(int8_t &color, int8_t &direction);
+  bool CanRender();
 
 private:
   // Colors for rainbow mode
@@ -38,6 +44,9 @@ private:
   int8_t greenDirection;
   int8_t blue;
   int8_t blueDirection;
+
+  uint16_t delay;
+  uint32_t lastDisplay;
 
   coord_t minX;
   coord_t maxX;
