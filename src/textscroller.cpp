@@ -36,7 +36,8 @@ void TextScroller::SetText(const String& message) {
   minX = - length + 1;
   position = 0;
 
-  lg->Print("New text: '" + String(message.c_str()) + "' of size: " + String(length));
+  lg->Print("New text - '" + String(message.c_str()) + "', " + String(length) +
+            " px wide (" + String(text->StringLength(scrollMessage)) + " chars)");
 }
 
 void TextScroller::ScrollTextColor(ScrollDirection dir) {

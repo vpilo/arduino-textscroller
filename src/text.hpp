@@ -17,6 +17,7 @@ private:
 
 public:
     void Display(std::string text, int16_t x, int16_t y, PixelPrinterLambda operation);
+    uint16_t StringLength(std::string text);
     uint16_t StringPixelSize(std::string text);
 
 private:
