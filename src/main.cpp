@@ -20,8 +20,8 @@ void setup() {
   screen = new Screen();
   text = new Text();
   Utils::SetRandomSeed();
-  
-  wifi.Init("ssid", "password");
+
+  wifi.Init(WIFI_SSID, WIFI_PASSWORD);
 
   scroll.SetText("This looks like a message!");
 }
