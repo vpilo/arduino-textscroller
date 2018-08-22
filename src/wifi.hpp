@@ -9,7 +9,7 @@ class Wifi {
 private:
   static const uint16_t LISTEN_PORT = 10666;
   static const uint8_t MAX_INPUT_BUFFER = 255;
-  
+
 private:
   WiFiServer server {Wifi::LISTEN_PORT};
   WiFiClient client;
@@ -18,7 +18,7 @@ private:
   char inputBuffer[MAX_INPUT_BUFFER];
   int inputBufferIndex = 0;
   std::string message;
-  
+
   bool loading = true;
 
 public:

@@ -14,7 +14,7 @@ TextScroller::TextScroller() {
   greenDirection = +1;
   blueDirection = -1;
 
-  maxX = Screen::WIDTH - 1;
+  maxX = SCREEN_WIDTH - 1;
 
   SetSpeed(DEFAULT_SCROLL_SPEED);
   SetText("...");

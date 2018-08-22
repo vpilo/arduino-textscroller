@@ -52,8 +52,8 @@ uint64_t Text::GetSymbol(uint32_t codepoint) {
 bool Text::DisplayChar(uint64_t symbol, coord_t xPos, coord_t yPos, PixelPrinterLambda operation) {
     if (xPos + FONT_WIDTH < 0  ||
         yPos + FONT_HEIGHT < 0 ||
-        xPos > Screen::WIDTH   ||
-        yPos > Screen::HEIGHT) {
+        xPos > SCREEN_WIDTH   ||
+        yPos > SCREEN_HEIGHT) {
       return false;
     }
 

@@ -33,7 +33,7 @@ bool Wifi::IsReady() {
     return true;
   }
 }
-    
+
 void Wifi::Loop() {
   if (WiFi.status() != WL_CONNECTED) {
     return;

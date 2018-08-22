@@ -17,8 +17,8 @@ void Screen::SetPixel(int8_t x, int8_t y, RgbColor color) {
     adjusted.R = adjusted.G = adjusted.B =
       color.R * MAX_BRIGHTNESS_WHITE / MAX_BRIGHTNESS_COLORS;
   }
-  if (x < 0 || x >= WIDTH) return;
-  if (y < 0 || y >= HEIGHT) return;
+  if (x < 0 || x >= SCREEN_WIDTH) return;
+  if (y < 0 || y >= SCREEN_HEIGHT) return;
 
   _strip.SetPixelColor(_topo.Map(x, y), adjusted);
 }

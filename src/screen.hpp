@@ -2,15 +2,14 @@
 
 #include <NeoPixelBus.h>
 #include <stdint.h>
+#include <config.h>
 
 class Screen;
 extern Screen *screen;
 
 class Screen {
 public:
-    static const uint16_t WIDTH = 15;
-    static const uint16_t HEIGHT = 8;
-    static const uint16_t PIXELS = WIDTH * HEIGHT;
+    static const uint16_t PIXELS = SCREEN_WIDTH * SCREEN_HEIGHT;
 
     // Max brightness for white - lower than for normal colors as
     // the white degrades into other colors (yellow) above this threshold
@@ -22,7 +21,7 @@ public:
 private:
     const uint16_t _testFrameDuration = 5; // ms
 
-    NeoTopology<ColumnMajorAlternating270Layout> _topo = { WIDTH, HEIGHT };
+    NeoTopology<ColumnMajorAlternating270Layout> _topo = { SCREEN_WIDTH, SCREEN_HEIGHT };
     NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> _strip = { PIXELS };
 
 public:
