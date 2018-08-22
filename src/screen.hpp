@@ -26,7 +26,7 @@ private:
     NeoPixelBus<NeoGrbFeature, Neo800KbpsMethod> _strip = { PIXELS };
 
 public:
-    void Init();
+    Screen();
     void Test();
 
     void Clear();

@@ -8,10 +8,10 @@ extern Logger *lg;
 class Logger {
 private:
   static Logger *_instance;
-  void Init();
+  Logger();
 
 public:
   static Logger *Instance();
   void Print(String message);
-  void PrintOne(String message);
+  void PrintRaw(String message);
 };

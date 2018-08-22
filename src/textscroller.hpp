@@ -18,9 +18,9 @@ public:
     Left,
     Right
   };
-  
+
 public:
-  void Init();
+  TextScroller();
 
   // 1-10 where 1 is super slow, 10 is crazy fast
   void SetSpeed(uint16_t speed);
@@ -28,8 +28,7 @@ public:
   void SetText(const String& message);
   void SetScrollColor(RgbColor color);
 
-  void ScrollTextColor(ScrollDirection dir);
-  void ScrollTextRainbow(ScrollDirection dir);
+  void Scroll(bool rainbow = false, ScrollDirection dir = Left);
 
 private:
   void Display();

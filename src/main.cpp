@@ -14,15 +14,12 @@ TextScroller scroll;
 
 void setup() {
   screen = new Screen();
-  screen->Init();
   text = new Text();
   Utils::SetRandomSeed();
 
-  scroll.Init();
   scroll.SetText("This looks like a message!");
 }
 
 void loop() {
-  //scroll.ScrollTextRainbow(TextScroller::Left);
-  scroll.ScrollTextColor(TextScroller::Left);
+  scroll.Scroll(true /* rainbow */);
 }

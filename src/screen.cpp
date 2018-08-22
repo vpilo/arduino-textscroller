@@ -5,7 +5,7 @@ const RgbColor Screen::WHITE = { MAX_BRIGHTNESS_WHITE };
 const RgbColor Screen::BLACK = { 0 };
 
 
-void Screen::Init() {
+Screen::Screen() {
   _strip.Begin();
   Test();
   Clear();
@@ -30,7 +30,7 @@ void Screen::SetAllPixels(RgbColor color) {
 void Screen::Show() {
   _strip.Show();
 }
-    
+
 void Screen::ScreenToGray(int brightness) {
   RgbColor gray(brightness % MAX_BRIGHTNESS_WHITE);
   _strip.ClearTo(gray);

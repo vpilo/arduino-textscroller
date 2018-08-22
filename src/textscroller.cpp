@@ -6,7 +6,7 @@
 #include <limits.h>
 
 
-void TextScroller::Init() {
+TextScroller::TextScroller() {
   red = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   green = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
   blue = random(BRIGHTNESS_MIN, BRIGHTNESS_MAX);
@@ -51,7 +51,7 @@ void TextScroller::SetText(const String& message) {
             " px wide (" + String(text->StringLength(scrollMessage)) + " chars)");
 }
 
-void TextScroller::ScrollTextColor(ScrollDirection dir) {
+void TextScroller::Scroll(bool rainbow, ScrollDirection dir) {
   if (!CanRender()) {
     return;
   }
@@ -68,19 +68,13 @@ void TextScroller::ScrollTextColor(ScrollDirection dir) {
     }
   }
 
-  Display();
-}
-
-void TextScroller::ScrollTextRainbow(ScrollDirection dir) {
-  if (!CanRender()) {
-    return;
+  if (rainbow) {
+    RandomizeColor(red, redDirection);
+    RandomizeColor(green, greenDirection);
+    RandomizeColor(blue, blueDirection);
   }
 
-  RandomizeColor(red, redDirection);
-  RandomizeColor(green, greenDirection);
-  RandomizeColor(blue, blueDirection);
-
-  ScrollTextColor(dir);
+  Display();
 }
 
 void TextScroller::RandomizeColor(int8_t &color, int8_t &direction) {
@@ -89,22 +83,21 @@ void TextScroller::RandomizeColor(int8_t &color, int8_t &direction) {
   if(color <= BRIGHTNESS_MIN) {
     color = BRIGHTNESS_MIN;
     direction = -direction;
-  } else if(color >= BRIGHTNESS_MAX) { 
+  } else if(color >= BRIGHTNESS_MAX) {
     color = BRIGHTNESS_MAX;
     direction = -direction;
   }
 }
 
 bool TextScroller::CanRender() {
-  uint32_t now = millis();
-  if (lastDisplay + delay > now) {
+  if (lastDisplay + delay > millis()) {
     return false;
   }
-  lastDisplay = now;
   return true;
 }
 
 void TextScroller::Display() {
+  lastDisplay = millis();
   screen->SetAllPixels(Screen::BLACK);
   text->Display(scrollMessage, position, 0, [&](coord_t xP, coord_t yP, bool on) {
     screen->SetPixel(xP, yP, on ? RgbColor(red, green, blue) : Screen::BLACK);
