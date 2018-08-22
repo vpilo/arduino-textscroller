@@ -51,5 +51,5 @@ private:
   coord_t maxX;
 
   coord_t position;
-  std::string scrollMessage;
+  String scrollMessage;
 };

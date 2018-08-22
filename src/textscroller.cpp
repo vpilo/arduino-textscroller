@@ -36,18 +36,18 @@ void TextScroller::SetScrollColor(RgbColor color) {
 }
 
 void TextScroller::SetText(const String& message) {
-  if (scrollMessage.compare(message.c_str()) == 0) {
+  if (scrollMessage.compareTo(message) == 0) {
     return;
   }
 
-  scrollMessage = message.c_str();
+  scrollMessage = message;
 
   uint16_t length = text->StringPixelSize(scrollMessage);
   minX = - length + 1;
   position = 0;
   lastDisplay = 0;
 
-  lg->Print("New text - '" + String(message.c_str()) + "', " + String(length) +
+  lg->Print("New text - '" + message + "', " + String(length) +
             " px wide (" + String(text->StringLength(scrollMessage)) + " chars)");
 }
 

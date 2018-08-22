@@ -7,7 +7,7 @@
 
 //#define VERBOSE
 
-void Text::Display(std::string text, coord_t x, coord_t y, PixelPrinterLambda operation) {
+void Text::Display(String text, coord_t x, coord_t y, PixelPrinterLambda operation) {
   uint32_t codepoint;
   uint32_t state = UTF8_ACCEPT;
   coord_t stringOffset = 0;
@@ -15,7 +15,7 @@ void Text::Display(std::string text, coord_t x, coord_t y, PixelPrinterLambda op
   bool displayed;
 
 #ifdef VERBOSE
-  lg->Print("Displaying: " + String(text.c_str()) + " (" + String(x) + "," + String(y) + ")");
+  lg->Print("Displaying: " + text + " (" + String(x) + "," + String(y) + ")");
 #endif
 
   for (; *c_str; ++c_str) {
@@ -66,7 +66,7 @@ bool Text::DisplayChar(uint64_t symbol, coord_t xPos, coord_t yPos, PixelPrinter
     return true;
 }
 
-uint16_t Text::StringLength(std::string text) {
+uint16_t Text::StringLength(String text) {
   uint32_t codepoint;
   uint32_t state = UTF8_ACCEPT;
   uint16_t length = 0;
@@ -80,6 +80,6 @@ uint16_t Text::StringLength(std::string text) {
   return length;
 }
 
-uint16_t Text::StringPixelSize(std::string text) {
+uint16_t Text::StringPixelSize(String text) {
   return StringLength(text) * FONT_WIDTH;
 }

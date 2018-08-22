@@ -18,9 +18,9 @@ private:
     static const coord_t FONT_HEIGHT = 8;
 
 public:
-    void Display(std::string text, coord_t x, coord_t y, PixelPrinterLambda operation);
-    uint16_t StringLength(std::string text);
-    uint16_t StringPixelSize(std::string text);
+    void Display(String text, coord_t x, coord_t y, PixelPrinterLambda operation);
+    uint16_t StringLength(String text);
+    uint16_t StringPixelSize(String text);
 
 private:
     bool DisplayChar(uint64_t symbol, coord_t xPos, coord_t yPos, PixelPrinterLambda operation);
