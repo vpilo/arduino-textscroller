@@ -2,6 +2,7 @@
 #include <screen.hpp>
 #include <logger.hpp>
 #include <utils.hpp>
+#include <config.h>
 #include <Arduino.h>
 #include <limits.h>
 
