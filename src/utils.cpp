@@ -1,5 +1,4 @@
 #include <utils.hpp>
-#include <Arduino.h>
 
 void Utils::SetRandomSeed() {
     // random works best with a seed that can use 31 bits
@@ -14,4 +13,24 @@ void Utils::SetRandomSeed() {
 
     // lg->Print("New random seed: " + String(seed));
     randomSeed(seed);
+}
+
+bool Utils::Tokenize(const String line, std::list<String>& args) {
+  int begin = 0;
+  int end;
+  int length = line.length();
+
+  if (length < 1) {
+    return false;
+  }
+
+  while ((end = line.indexOf(' ', begin)) != -1) {
+    args.push_back(line.substring(begin, end));
+    //lg->Print("Token " + String(begin) + "-" + String(end) + ": " + args.back());
+    begin = end + 1;
+  }
+  args.push_back(line.substring(begin, length));
+  //lg->Print("Token " + String(begin) + "-end: " + args.back());
+
+  return true;
 }

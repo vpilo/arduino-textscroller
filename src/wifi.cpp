@@ -3,14 +3,11 @@
 #include <utils.hpp>
 #include <Arduino.h>
 
-wl_status_t Wifi::Init(std::string ssid, std::string password) {
-  lg->Print("Connecting to wifi SSID '" + String(ssid.c_str()) + "'");
+
+wl_status_t Wifi::Connect(String ssid, String password) {
+  lg->Print("Connecting to wifi SSID '" + ssid + "'");
 
   wl_status_t status = WiFi.begin(ssid.c_str(), password.c_str());
-  if (status != WL_CONNECTED) {
-    lg->Print("Connection failed: error " + String(status));
-    return status;
-  }
 
   return status;
 }
@@ -19,19 +16,25 @@ String Wifi::GetIp() {
   return WiFi.localIP().toString();
 }
 
-bool Wifi::IsReady() {
-  if (WiFi.status() != WL_CONNECTED) {
-    if (!loading) {
-      loading = true;
+bool Wifi::GetStatus(wl_status_t &status, bool &changed) {
+  status = WiFi.status();
+  changed = (status != lastStatus);
+  lastStatus = status;
+
+  bool result = status == WL_CONNECTED;
+  if (changed) {
+    if (result) {
+      server.begin();
+    } else {
+      server.stop();
     }
-    return false;
-  } else {
-    if (loading) {
-      loading = false;
-    }
-    server.begin();
-    return true;
   }
+
+  return result;
+}
+
+void Wifi::SetCommandCallback(CommandCallback callback) {
+  this->callback = callback;
 }
 
 void Wifi::Loop() {
@@ -40,32 +43,47 @@ void Wifi::Loop() {
   }
 
   if (!client.connected()) {
+    if (hasClient) {
+      hasClient = false;
+      lg->Print("Client disconnected.");
+    }
     client = server.available();
     return;
   }
 
-  if (client.available()) {
+  hasClient = true;
+
+  while (client.available()) {
     char ch = (char)client.read();
 
     inputBuffer[inputBufferIndex++] = ch;
 
-    if (ch == '\n' || inputBufferIndex >= MAX_INPUT_BUFFER) {
+    if (ch == '\n' || ch == '\0' || inputBufferIndex >= MAX_INPUT_BUFFER) {
       if (inputBufferIndex >= MAX_INPUT_BUFFER) {
-        lg->Print("WARNING: Input buffer was too long");
+        lg->Print("WARNING: Input buffer was too long, truncated to " + String(MAX_INPUT_BUFFER));
       }
 
       inputBuffer[inputBufferIndex - 1] = '\0';
 
-      message = inputBuffer;
-      lg->Print("Received command: <<" + String(message.c_str()) + ">>");
+      String command = { inputBuffer };
 
+      lg->Print("Client " + client.remoteIP().toString() + " sent command: " + command);
+
+      if (callback) {
+        String answer;
+        bool ok = callback(command, answer);
+        if (!ok) {
+          lg->Print("> Error: " + answer);
+          client.println(answer);
+          client.stop();
+        } else {
+          client.println("OK");
+        }
+      }
+
+      memset(inputBuffer, '\0', MAX_INPUT_BUFFER);
       inputBufferIndex = 0;
+      break;
     }
   }
-}
-
-std::string Wifi::GetMessage() {
-  std::string other{message};
-  message.clear();
-  return other;
 }

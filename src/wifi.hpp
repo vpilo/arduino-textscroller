@@ -3,29 +3,36 @@
 #include <ESP8266WiFi.h>
 
 #include <stdint.h>
-#include <string>
+#include <config.h>
 
 class Wifi {
-private:
+public:
   static const uint16_t LISTEN_PORT = 10666;
-  static const uint8_t MAX_INPUT_BUFFER = 255;
+  using CommandCallback = std::function< bool(const String, String&) >;
 
 private:
-  WiFiServer server {Wifi::LISTEN_PORT};
+  // UTF-8 strings can be very long.
+  static const uint16_t MAX_INPUT_BUFFER = MAX_MESSAGE_LENGTH * 3;
+
+private:
+  WiFiServer server { Wifi::LISTEN_PORT };
   WiFiClient client;
+  bool hasClient = false;
+
+  CommandCallback callback;
 
   // Data store for text data
   char inputBuffer[MAX_INPUT_BUFFER];
-  int inputBufferIndex = 0;
-  std::string message;
+  uint16_t inputBufferIndex = 0;
 
-  bool loading = true;
+  wl_status_t lastStatus = WL_IDLE_STATUS;
 
 public:
-  wl_status_t Init(std::string ssid, std::string password);
-  bool IsReady();
+  wl_status_t Connect(String ssid, String password);
+  void SetCommandCallback(CommandCallback callback);
+
+  bool GetStatus(wl_status_t& status, bool& changed);
   void Loop();
-  std::string GetMessage();
 
   String GetIp();
 };

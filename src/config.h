@@ -7,3 +7,5 @@
 // Access Point to connect to
 #define WIFI_SSID      "ssid"
 #define WIFI_PASSWORD  "password"
+
+#define MAX_MESSAGE_LENGTH   128
