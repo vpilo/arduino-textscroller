@@ -69,6 +69,8 @@ bool ParseCommand(const String commandLine, String& answer) {
     rainbow = false;
   } else if (cmd == "RAINBOW") {
     rainbow = true;
+  } else if (cmd == "BYE") {
+    // Do nothing
   } else {
     answer = cmd + " is not a valid command.";
     return false;

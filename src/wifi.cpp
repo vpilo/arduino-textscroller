@@ -45,7 +45,10 @@ void Wifi::Loop() {
   if (!client.connected()) {
     if (hasClient) {
       hasClient = false;
-      lg->Print("Client disconnected.");
+      if (callback) {
+        String args;
+        callback(String("BYE"), args);
+      }
     }
     client = server.available();
     return;
@@ -74,10 +77,10 @@ void Wifi::Loop() {
         bool ok = callback(command, answer);
         if (!ok) {
           lg->Print("> Error: " + answer);
-          client.println(answer);
+          client.print(answer + '\n');
           client.stop();
         } else {
-          client.println("OK");
+          client.print("OK\n");
         }
       }
 
