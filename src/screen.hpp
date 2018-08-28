@@ -36,5 +36,6 @@ public:
     // Manual pixel management
     void SetPixel(int8_t x, int8_t y, RgbColor color);
     void SetAllPixels(RgbColor color);
+    bool SetAllPixels(uint32_t* data, uint16_t count);
     void Show();
 };

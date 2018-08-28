@@ -15,6 +15,7 @@ Logger *lg = Logger::Instance();
 TextScroller scroll;
 Wifi wifi;
 
+bool draw = false;
 bool rainbow = true;
 
 bool ParseCommand(const String commandLine, String& answer) {
@@ -47,6 +48,7 @@ bool ParseCommand(const String commandLine, String& answer) {
       answer = "Your message is too long.";
       return false;
     }
+    draw = false;
     scroll.SetText(msg);
   } else if (cmd == "SPEED") {
     if (args.size() < 1) {
@@ -69,8 +71,36 @@ bool ParseCommand(const String commandLine, String& answer) {
     rainbow = false;
   } else if (cmd == "RAINBOW") {
     rainbow = true;
+  } else if (cmd == "PIXELS") {
+    if (args.size() != 1) {
+      answer = "PIXELS needs one argument.";
+      return false;
+    }
+
+    const String &hex = args.front();
+    const char *rawHex = hex.c_str();
+    uint16_t pixelCount = hex.length() / 6;
+
+    if (pixelCount != Screen::PIXELS) {
+      answer = "PIXELS needs a single hex-encoded string containing 24bpp RGB pixel data for "
+        + String(SCREEN_WIDTH) + " by " + String(SCREEN_HEIGHT) + " pixels (expected "
+        + String(Screen::PIXELS) + ", got " + String(pixelCount) + ").";
+      return false;
+    }
+
+    uint8_t idx = 0;
+    uint32_t pixelBuffer[Screen::PIXELS];
+    for (uint16_t pixel = 0 ; pixel < pixelCount ; ++pixel, ++idx, rawHex += 6) {
+      pixelBuffer[idx] = Utils::GetHexDigit(rawHex) << 16 | Utils::GetHexDigit(rawHex+2) << 8 |  Utils::GetHexDigit(rawHex+4);
+    }
+
+    draw = true;
+    return screen->SetAllPixels(pixelBuffer, pixelCount);
   } else if (cmd == "BYE") {
-    // Do nothing
+    if (draw) {
+		  scroll.SetText("Send messages @ " + wifi.GetIp());
+      draw = false;
+    }
   } else {
     answer = cmd + " is not a valid command.";
     return false;
@@ -99,10 +129,13 @@ void loop() {
 		if (!online) {
 			scroll.SetText("**Getting wifi**");
 		} else {
-			scroll.SetText("Send me a message @ " + wifi.GetIp());
+			scroll.SetText("Send messages @ " + wifi.GetIp());
 		}
 	}
 
-  scroll.Scroll(rainbow);
+  if (!draw) {
+    scroll.Scroll(rainbow);
+  }
   wifi.Loop();
+  Utils::LogFPS();
 }

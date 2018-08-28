@@ -31,6 +31,35 @@ void Screen::Show() {
   _strip.Show();
 }
 
+bool Screen::SetAllPixels(uint32_t* data, uint16_t count) {
+  RgbColor color;
+  uint16_t current = 0;
+
+  if (count > PIXELS) {
+    lg->Print("Expected " + String(PIXELS) + " pixels, got " + String(count));
+    return false;
+  }
+
+  _strip.ClearTo(BLACK);
+
+  for (int8_t y = 0 ; y < SCREEN_HEIGHT ; ++y) {
+    for (int8_t x = 0 ; x < SCREEN_WIDTH ; ++x) {
+      uint32_t pixel = data[current++];
+      color.R = pixel >> 16;
+      color.G = pixel >> 8 & 0xFF;
+      color.B = pixel & 0xFF;
+
+      _strip.SetPixelColor(_topo.Map(x, y), color);
+      if (current > count) {
+        return false;
+      }
+    }
+  }
+
+  _strip.Show();
+  return true;
+}
+
 void Screen::ScreenToGray(int brightness) {
   RgbColor gray(brightness % MAX_BRIGHTNESS_WHITE);
   _strip.ClearTo(gray);

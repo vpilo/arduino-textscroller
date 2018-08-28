@@ -11,8 +11,8 @@ public:
   using CommandCallback = std::function< bool(const String, String&) >;
 
 private:
-  // UTF-8 strings can be very long.
-  static const uint16_t MAX_INPUT_BUFFER = MAX_MESSAGE_LENGTH * 3;
+  // Drawings can be very long.
+  static const uint16_t MAX_INPUT_BUFFER = MAX_MESSAGE_LENGTH * 6;
 
 private:
   WiFiServer server { Wifi::LISTEN_PORT };

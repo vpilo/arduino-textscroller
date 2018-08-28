@@ -8,4 +8,4 @@
 #define WIFI_SSID      "ssid"
 #define WIFI_PASSWORD  "password"
 
-#define MAX_MESSAGE_LENGTH   128
+#define MAX_MESSAGE_LENGTH   256
