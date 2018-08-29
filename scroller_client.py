@@ -2,6 +2,7 @@
 import socket
 import sys
 import argparse
+import pipes
 from time import sleep
 
 VERBOSE = True
@@ -22,8 +23,10 @@ parser.add_argument('-c', '--color', dest='color', nargs=3, type=int,
                     help='Text color, three 0-255 values for each of the R, G, B channels')
 parser.add_argument('-r', '--rainbow', dest='rainbow', action='store_true', default=False,
                     help='Rainbow colors mode, overrides --color')
-parser.add_argument(dest='message', nargs='+',
-                    help='Message to display. It can have no quotes.')
+parser.add_argument('-p', '--pipe', dest='pipe', default=None, type=float,
+                    help='Display raw pixel data via input pipe. Pipe RGB hex-encoded bytes (e.g. FF00FF for purple) for each pixel. The argument is a delay between frames.')
+parser.add_argument('-m', '--message', dest='message',
+                    help='Message to display')
 
 args = parser.parse_args()
 
@@ -37,12 +40,14 @@ if args.color != None:
             print("Colors must be in the 0-255 range")
             exit(1)
 
+if args.pipe == None and args.message == None:
+    print("You must either display a message or pipe pixels")
+    exit(1)
+
 def command(sock, cmd):
     try:
         if VERBOSE: print("Sending command: '%s'" % cmd)
-
-        cmd += "\n"
-        sock.sendall(cmd)
+        sock.sendall(cmd + "\n")
     except socket.error:
         print("Cannot send command: {:s}".format(cmd))
         exit(2)
@@ -55,7 +60,7 @@ def command(sock, cmd):
             chunk = sock.recv(MAX_ROW_BYTES - bytes_received)
             buffer += chunk
             bytes_received = bytes_received + len(chunk)
-            if VERBOSE: print("Got {:d} bytes: '{}'".format(len(chunk), ":".join("{:02x}".format(ord(c)) for c in chunk)))
+            if VERBOSE: print("Got {:d} bytes: '{}'".format(len(chunk), " ".join("{:02x}".format(ord(c)) for c in chunk)))
             if len(chunk) == 0 or buffer.find('\n') >= 0:
                 break
     except socket.error:
@@ -86,6 +91,12 @@ if args.speed != None:
 if args.color != None:
     command(s, "COLOR {:d} {:d} {:d}".format(args.color[0], args.color[1], args.color[2]))
 
-command(s, "TEXT " + ' '.join(args.message))
+if args.message != None:
+    command(s, "TEXT " + ' '.join(args.message))
+
+if args.pipe != None:
+    for line in sys.stdin:
+        command(s, "PIXELS {}".format(line.strip()))
+        sleep(args.pipe)
 
 s.close()
