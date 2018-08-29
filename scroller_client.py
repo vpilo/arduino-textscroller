@@ -88,7 +88,9 @@ if VERBOSE: print("Connected")
 if args.speed != None:
     command(s, "SPEED " + args.speed)
 
-if args.color != None:
+if args.rainbow == True:
+    command(s, "RAINBOW")
+elif args.color != None:
     command(s, "COLOR {:d} {:d} {:d}".format(args.color[0], args.color[1], args.color[2]))
 
 if args.message != None:
