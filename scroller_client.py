@@ -5,7 +5,7 @@ import argparse
 import pipes
 from time import sleep
 
-VERBOSE = True
+VERBOSE = False
 MAX_ROW_BYTES = 256
 PORT = 10666
 
