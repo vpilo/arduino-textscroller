@@ -18,14 +18,7 @@ Wifi wifi;
 bool draw = false;
 bool rainbow = true;
 
-bool ParseCommand(const String commandLine, String& answer) {
-  std::list<String> args;
-
-  if (!Utils::Tokenize(commandLine, args) || args.size() < 1) {
-    answer = "No command given.";
-    return false;
-  }
-
+bool ParseCommand(std::list<String> args, String& answer) {
   String cmd = args.front();
   args.pop_front();
 

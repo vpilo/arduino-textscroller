@@ -2,13 +2,14 @@
 
 #include <ESP8266WiFi.h>
 
+#include <list>
 #include <stdint.h>
 #include <config.h>
 
 class Wifi {
 public:
   static const uint16_t LISTEN_PORT = 10666;
-  using CommandCallback = std::function< bool(const String, String&) >;
+  using CommandCallback = std::function< bool(std::list<String>, String&) >;
 
 private:
   // Drawings can be very long.

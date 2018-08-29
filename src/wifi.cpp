@@ -46,8 +46,9 @@ void Wifi::Loop() {
     if (hasClient) {
       hasClient = false;
       if (callback) {
-        String args;
-        callback(String("BYE"), args);
+        String answer;
+        std::list<String> cmd { "BYE" };
+        callback(cmd, answer);
       }
     }
     client = server.available();
@@ -68,13 +69,14 @@ void Wifi::Loop() {
 
       inputBuffer[inputBufferIndex - 1] = '\0';
 
-      String command = { inputBuffer };
-
-      lg->Print("Client " + client.remoteIP().toString() + " sent command: " + command);
-
-      if (callback) {
+      std::list<String> args;
+      if (!Utils::Tokenize(inputBuffer, args) || args.size() < 1) {
+        client.print("No command given.\n");
+        client.stop();
+      } else if (callback) {
         String answer;
-        bool ok = callback(command, answer);
+        lg->Print("Client " + client.remoteIP().toString() + " sent command: " + args.front());
+        bool ok = callback(args, answer);
         if (!ok) {
           lg->Print("> Error: " + answer);
           client.print(answer + '\n');
@@ -82,6 +84,9 @@ void Wifi::Loop() {
         } else {
           client.print("OK\n");
         }
+      } else {
+        // Ignore everything if a callback is not set
+        client.stop();
       }
 
       memset(inputBuffer, '\0', MAX_INPUT_BUFFER);
