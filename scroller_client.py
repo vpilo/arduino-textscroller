@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 import socket
 import sys
 import argparse
@@ -10,6 +10,7 @@ MAX_ROW_BYTES = 256
 PORT = 10666
 
 epilog = '''
+Not specifying a color keeps the previous one.
 The scroller reserves the right to crop your message as it pleases.
 '''
 
@@ -37,19 +38,21 @@ if args.speed != None and (args.speed < 1 or args.speed > 10):
 if args.color != None:
     for channel in args.color:
         if channel < 0 or channel > 255:
-            print("Colors must be in the 0-255 range")
+            print("Colors must be in the 0-255 range", file=sys.stderr)
             exit(1)
 
 if args.pipe == None and args.message == None:
     print("You must either display a message or pipe pixels")
     exit(1)
 
+
 def command(sock, cmd):
+    sendCmd = cmd.encode('utf8', errors='surrogateescape')
     try:
-        if VERBOSE: print("Sending command: '%s'" % cmd)
-        sock.sendall(cmd + "\n")
+        if VERBOSE: print("Sending command: '{:s}'".format(sendCmd))
+        sock.sendall(sendCmd + b'\n')
     except socket.error:
-        print("Cannot send command: {:s}".format(cmd))
+        print("Cannot send command: {:s}".format(sendCmd), file=sys.stderr)
         exit(2)
 
     buffer = bytearray()
@@ -60,30 +63,31 @@ def command(sock, cmd):
             chunk = sock.recv(MAX_ROW_BYTES - bytes_received)
             buffer += chunk
             bytes_received = bytes_received + len(chunk)
-            if VERBOSE: print("Got {:d} bytes: '{}'".format(len(chunk), " ".join("{:02x}".format(ord(c)) for c in chunk)))
-            if len(chunk) == 0 or buffer.find('\n') >= 0:
+            if VERBOSE: print("Got {:d} bytes".format(len(chunk)))
+            if len(chunk) == 0 or buffer.find(b'\n') >= 0:
                 break
     except socket.error:
         print("Connection broken")
         exit(2)
-    response = buffer.decode()
+    response = buffer.decode('utf8', errors='surrogateescape')
+    if VERBOSE: print("Answer: {:s}".format(response.strip()))
     if not response.startswith("OK\n"):
-        print("Error: {}".format(buffer))
+        print("Error: {}".format(buffer), file=sys.stderr)
         exit(2)
+
 
 s = None
 try:
     if VERBOSE: print("Connecting to %s..." % args.address)
     s = socket.create_connection((args.address, PORT), 5)
 except socket.error:
-    print("There's no scroller at that address.")
+    print("There's no scroller at that address.", file=sys.stderr)
     exit(1)
 except socket.timeout:
-    print("Unable to connect with the scroller at that address.")
+    print("Unable to connect with the scroller at that address.", file=sys.stderr)
     exit(1)
 
 if VERBOSE: print("Connected")
-
 
 if args.speed != None:
     command(s, "SPEED " + args.speed)
