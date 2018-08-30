@@ -42,6 +42,7 @@ bool ParseCommand(std::list<String> args, String& answer) {
       return false;
     }
     draw = false;
+    lg->Print("Setting message " + msg);
     scroll.SetText(msg);
   } else if (cmd == "SPEED") {
     if (args.size() < 1) {
@@ -59,7 +60,7 @@ bool ParseCommand(std::list<String> args, String& answer) {
     uint8_t G = args.front().toInt();
     args.pop_front();
     uint8_t B = args.front().toInt();
-    lg->Print("Color channels: " + String(R) + ", " + String(G) + ", " + String(B));
+    lg->Print("Setting color " + String(R) + ", " + String(G) + ", " + String(B));
     scroll.SetScrollColor(RgbColor(R, G, B));
     rainbow = false;
   } else if (cmd == "RAINBOW") {

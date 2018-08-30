@@ -49,7 +49,7 @@ if args.pipe == None and args.message == None:
 def command(sock, cmd):
     sendCmd = cmd.encode('utf8', errors='surrogateescape')
     try:
-        if VERBOSE: print("Sending command: '{:s}'".format(sendCmd))
+        if VERBOSE: print("Sending command: {:s}".format(' '.join('{:02x}'.format(x) for x in sendCmd)))
         sock.sendall(sendCmd + b'\n')
     except socket.error:
         print("Cannot send command: {:s}".format(sendCmd), file=sys.stderr)
@@ -98,7 +98,7 @@ elif args.color != None:
     command(s, "COLOR {:d} {:d} {:d}".format(args.color[0], args.color[1], args.color[2]))
 
 if args.message != None:
-    command(s, "TEXT " + ' '.join(args.message))
+    command(s, "TEXT " + args.message)
 
 if args.pipe != None:
     for line in sys.stdin:
