@@ -27,7 +27,7 @@ void TextScroller::SetSpeed(uint16_t speed) {
   if (speed > 10)
     speed = 10;
 
-  delay = 60 * speed;
+  delay = 30 * speed;
 }
 
 void TextScroller::SetScrollColor(RgbColor color) {

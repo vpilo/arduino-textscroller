@@ -90,7 +90,7 @@ except socket.timeout:
 if VERBOSE: print("Connected")
 
 if args.speed != None:
-    command(s, "SPEED " + args.speed)
+    command(s, "SPEED " + str(args.speed))
 
 if args.rainbow == True:
     command(s, "RAINBOW")
