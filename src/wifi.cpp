@@ -1,7 +1,8 @@
+
+#include <Arduino.h>
 #include <wifi.hpp>
 #include <logger.hpp>
 #include <utils.hpp>
-#include <Arduino.h>
 
 
 wl_status_t Wifi::Connect(String ssid, String password) {
