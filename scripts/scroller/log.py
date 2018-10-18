@@ -1,6 +1,6 @@
 import sys
 
-_VERBOSE = True
+_VERBOSE = False
 
 def l(message):
   print(message)
